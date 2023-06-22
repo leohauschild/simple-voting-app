@@ -23,6 +23,6 @@ jobs:
       - name: Build and Push to DockerHub
         run: |
           docker buildx build --push --platform linux/amd64 \
-          --tag childb/votingapp-result:latest result/
+          --tag leohauschild/vote-app-result:latest result/
       - name: DockerHub Logout
         run: docker logout
