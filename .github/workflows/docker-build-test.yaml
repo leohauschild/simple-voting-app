@@ -1,17 +1,14 @@
-name: ci
+name: build-worker-test
 
 on:
   push:
     branches:
-      - "main"
+      - main
+    tags: [ v* ]
+
     paths:
       - "worker/**"
       - ".github/workflows/docker-build-worker.yaml"
-    tags:
-      - "v*.*.*"
-  pull_request:
-    branches:
-      - "main"
 
 jobs:
   docker:

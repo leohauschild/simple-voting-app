@@ -1,29 +1,29 @@
-name: build-worker.yaml
-on:
-  push:
-    branches:
-      - main
-    tags: [ v* ]
+# name: build-worker.yaml
+# on:
+#   push:
+#     branches:
+#       - main
+#     tags: [ v* ]
 
-    paths:
-      - "worker/**"
-      - ".github/workflows/docker-build-worker.yaml"
+#     paths:
+#       - "worker/**"
+#       - ".github/workflows/docker-build-worker.yaml"
     
-env:
-  DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
-  DOCKER_HUB_PASS: ${{ secrets.DOCKER_HUB_PASS }}
+# env:
+#   DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+#   DOCKER_HUB_PASS: ${{ secrets.DOCKER_HUB_PASS }}
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Git Checkout
-        uses: actions/checkout@v3
-      - name: Docker Login
-        run: docker login --username ${{ env.DOCKER_HUB_USER }} --password ${{ env.DOCKER_HUB_PASS }}
-      - name: Build and Push to DockerHub
-        run: |
-          docker buildx build --push --platform linux/amd64 \
-          --tag leohauschild/vote-app-worker:latest worker/
-      - name: DockerHub Logout
-        run: docker logout
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Git Checkout
+#         uses: actions/checkout@v3
+#       - name: Docker Login
+#         run: docker login --username ${{ env.DOCKER_HUB_USER }} --password ${{ env.DOCKER_HUB_PASS }}
+#       - name: Build and Push to DockerHub
+#         run: |
+#           docker buildx build --push --platform linux/amd64 \
+#           --tag leohauschild/vote-app-worker:latest worker/
+#       - name: DockerHub Logout
+#         run: docker logout
