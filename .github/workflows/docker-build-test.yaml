@@ -3,7 +3,10 @@ name: ci
 on:
   push:
     branches:
-      - "master"
+      - "main"
+    paths:
+      - "worker/**"
+      - ".github/workflows/docker-build-worker.yaml"
     tags:
       - "v*.*.*"
   pull_request:
