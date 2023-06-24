@@ -53,7 +53,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
   
-  chnage-image:
+  change-image:
     needs: [docker]
     runs-on: ubuntu-latest
     steps:
