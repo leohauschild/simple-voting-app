@@ -8,7 +8,7 @@ on:
 
     paths:
       - "worker/**"
-      - ".github/workflows/docker-build-worker.yaml"
+      #- ".github/workflows/docker-build-worker.yaml"
 
 jobs:
   docker:

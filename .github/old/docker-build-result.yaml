@@ -1,0 +1,28 @@
+name: build-result.yaml
+on:
+  push:
+    branches:
+      - main
+
+    paths:
+      - "result/**"
+      - ".github/workflows/docker-build-result.yaml"
+    
+env:
+  DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+  DOCKER_HUB_PASS: ${{ secrets.DOCKER_HUB_PASS }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+      - name: Docker Login
+        run: docker login --username ${{ env.DOCKER_HUB_USER }} --password ${{ env.DOCKER_HUB_PASS }}
+      - name: Build and Push to DockerHub
+        run: |
+          docker buildx build --push --platform linux/amd64 \
+          --tag leohauschild/vote-app-result:latest result/
+      - name: DockerHub Logout
+        run: docker logout

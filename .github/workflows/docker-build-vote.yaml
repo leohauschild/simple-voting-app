@@ -2,8 +2,8 @@ name: docker-build-vote.yaml
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
     tags: [ v* ]
 
     paths:
@@ -13,10 +13,16 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    outputs: 
+      latest_tag: ${{ steps.get_tag.outputs.latest_tag }}
     steps:
       -
         name: Checkout
         uses: actions/checkout@v3
+      -  
+        name: Get latest repo tag
+        id: get_tag
+        run: echo "latest_tag=$(git describe --abbrev=0 --tags)" >> "$GITHUB_OUTPUT"
       -
         name: Docker meta
         id: meta
@@ -46,3 +52,30 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+  
+  chnage-image:
+    needs: [docker]
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: checkout
+        uses: actions/checkout@v3
+        with:
+          repository: 'leohauschild/devops_project'
+      - 
+        name: change image from gitops
+        run: |
+          ls voting-app-yaml-files\/vote_deployment.yaml | xargs sed -i -r "s/image: (.*)/image: leohauschild\/vote-app-vote:${{ needs.docker.outputs.latest_tag }}/g"
+      -
+        name: Deploy to external repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN }}
+        with:
+          # GitHub Action output files
+          source-directory: .
+          destination-github-username: leohauschild
+          destination-repository-name: devops_project
+          user-email: leohauschild@outlook.com
+          # It defaults to `main`
+          # target-branch: "gh-pages"
