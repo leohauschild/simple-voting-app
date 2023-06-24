@@ -26,6 +26,7 @@ jobs:
           images: leohauschild/vote-app-worker
           # generate Docker tags based on the following events/attributes
           tags: |
+            latest
             type=semver,pattern={{version}}
       -
         name: Set up Docker Buildx
