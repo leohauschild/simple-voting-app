@@ -1,28 +1,48 @@
-name: build-vote.yaml
+name: docker-build-vote.yaml
+
 on:
   push:
     branches:
       - main
+    tags: [ v* ]
 
     paths:
       - "vote/**"
       - ".github/workflows/docker-build-vote.yaml"
-    
-env:
-  DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
-  DOCKER_HUB_PASS: ${{ secrets.DOCKER_HUB_PASS }}
 
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Git Checkout
+      -
+        name: Checkout
         uses: actions/checkout@v3
-      - name: Docker Login
-        run: docker login --username ${{ env.DOCKER_HUB_USER }} --password ${{ env.DOCKER_HUB_PASS }}
-      - name: Build and Push to DockerHub
-        run: |
-          docker buildx build --push --platform linux/amd64 \
-          --tag leohauschild/vote-app-vote:latest vote/
-      - name: DockerHub Logout
-        run: docker logout
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          # list of Docker images to use as base name for tags
+          images: leohauschild/vote-app-vote
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            latest
+            type=semver,pattern={{version}}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASS }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: vote
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
