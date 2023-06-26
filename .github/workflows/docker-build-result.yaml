@@ -2,29 +2,33 @@ name: docker-build-result.yaml
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
     tags: [ v* ]
 
     paths:
       - "result/**"
-      #- ".github/workflows/docker-build-result.yaml"
+      - ".github/workflows/docker-build-result.yaml"
 
 jobs:
   docker:
     runs-on: ubuntu-latest
+    outputs: 
+      latest_tag: ${{ steps.get_tag.outputs.latest_tag }}
     steps:
       -
         name: Checkout
         uses: actions/checkout@v3
+      -  
+        name: Get latest repo tag
+        id: get_tag
+        run: echo "latest_tag=$(git describe --abbrev=0 --tags)" >> "$GITHUB_OUTPUT"
       -
         name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
-          # list of Docker images to use as base name for tags
           images: leohauschild/vote-app-result
-          # generate Docker tags based on the following events/attributes
           tags: |
             latest
             type=semver,pattern={{version}}
@@ -46,3 +50,26 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+  
+  change-image:
+    needs: [docker]
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: checkout
+        uses: actions/checkout@v3
+        with:
+          repository: 'leohauschild/devops_project'
+          token: ${{ secrets.EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN }}
+      - 
+        name: change image from gitops
+        run: |
+          ls voting-app-yaml-files\/result_deployment.yaml | xargs sed -i -r "s/image: (.*)/image: leohauschild\/vote-app-result:${{ needs.docker.outputs.latest_tag }}/g"
+      - 
+        name: commit
+        run: |
+          git config --global user.name leohauschild
+          git config --global user.mail leohauschild@outlook.com
+          git add .
+          git commit -m "change vote-app-result image tag to ${{ needs.docker.outputs.latest_tag }}"
+          git push origin main
