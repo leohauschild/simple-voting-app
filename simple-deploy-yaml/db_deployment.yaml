@@ -4,9 +4,9 @@ metadata:
   name: vote-app-psql
   labels:
     app: vote-app-db
-  namespace: l-prod
+  namespace: voting-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: vote-app-db
@@ -40,19 +40,19 @@ spec:
         - mountPath: /var/lib/postgresql/data/
           name: db-data
           subPath: postgres
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: size
-                    operator: In
-                    values:
-                    - Large-02
-      volumes:
-        - name: db-data
-          persistentVolumeClaim:
-            claimName: vote-app-pvc
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: size
+      #               operator: In
+      #               values:
+      #               - Large-02
       # volumes:
-      # - name: db-data
-      #   emptyDir: {}
+      #   - name: db-data
+      #     persistentVolumeClaim:
+            # claimName: vote-app-pvc
+      volumes:
+      - name: db-data
+        emptyDir: {}

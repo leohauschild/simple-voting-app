@@ -4,7 +4,7 @@ metadata:
   labels:
     app: vote-app-vote
   name: vote-app-vote
-  namespace: l-prod
+  namespace: voting-app
 spec:
   replicas: 1
   selector:
@@ -21,7 +21,7 @@ spec:
         app: vote-app-vote
     spec:
       containers:
-      - image: dockersamples/examplevotingapp_vote
+      - image: leohauschild/vote-app-vote:v2.0.0
         name: vote
         resources:
           limits:

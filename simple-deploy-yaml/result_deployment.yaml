@@ -4,7 +4,7 @@ metadata:
   name: vote-app-result
   labels:
     app: vote-app-result
-  namespace: l-prod
+  namespace: voting-app
 spec:
   replicas: 1
   selector:
@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: result
-        image: dockersamples/examplevotingapp_result
+        image: leohauschild/vote-app-result:v1.2.2
         resources:
           limits:
             memory: "100Mi"
@@ -32,4 +32,4 @@ spec:
             cpu: "50m"
         ports:
         - containerPort: 80
-          name: result
+          name: vote-app-result

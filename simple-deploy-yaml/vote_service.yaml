@@ -4,14 +4,14 @@ metadata:
   labels:
     app: vote-app-service
   name: vote-app-service
-  namespace: l-prod
+  namespace: voting-app
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
   - name: "vote-service"
     port: 5000
     targetPort: 80
-    # nodePort: 31000
+    nodePort: 31000
   selector:
     app: vote-app-vote
   

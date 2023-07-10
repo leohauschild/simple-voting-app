@@ -4,7 +4,7 @@ metadata:
   name: vote-app-redis
   labels:
     app: vote-app-redis
-  namespace: l-prod
+  namespace: voting-app
 spec:
   replicas: 1
   selector:
@@ -21,7 +21,7 @@ spec:
         resources:
           limits:
             memory: "128Mi"
-            cpu: "100m"
+            cpu: "200m"
           requests:
             memory: "50Mi"
             cpu: "50m"

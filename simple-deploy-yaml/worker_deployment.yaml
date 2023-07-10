@@ -1,10 +1,10 @@
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   labels:
     app: vote-app-worker
   name: vote-app-worker
-  namespace: l-prod
+  namespace: voting-app
 spec:
   selector:
     matchLabels:
@@ -15,7 +15,7 @@ spec:
         app: vote-app-worker
     spec:
       containers:
-      - image: dockersamples/examplevotingapp_worker
+      - image: leohauschild/vote-app-worker:v1.2.2
         name: worker
         resources:
           limits:
