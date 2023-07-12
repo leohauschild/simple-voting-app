@@ -21,6 +21,6 @@ entries:
     name: vote-app
     type: application
     urls:
-    - charts/vote-app/charts/vote-app-1.0.0.tgz
+    - charts/vote-app/vote-app-1.0.0.tgz
     version: 1.0.0
 generated: "2023-07-10T08:28:39.893149737-03:00"
