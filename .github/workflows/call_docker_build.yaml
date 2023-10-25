@@ -1,4 +1,4 @@
-name: Docker Build
+name: Docker Build Result
 
 on:
   push:
@@ -11,16 +11,17 @@ on:
     #  - 'README.md'
   
   pull_request:
-    paths-ignore:
-      - 'README.md'
+    paths: 
+      - "result/**"
+
+    # paths-ignore:
+    #   - 'README.md'
 
 
 jobs:
 
   call-docker-build:
-
     name: Call Docker Build
-
     uses: ./.github/workflows/reusable-docker-build.yaml
 
     permissions:
@@ -29,13 +30,10 @@ jobs:
       pull-requests: write
     
     secrets:
-
       dockerhub-username: ${{ secrets.DOCKER_HUB_USER }}  
-
       dockerhub-token: ${{ secrets.DOCKER_HUB_PASS }}
 
     with:
-      
       dockerhub-enable: true
       context: ./result
       image-name: |
