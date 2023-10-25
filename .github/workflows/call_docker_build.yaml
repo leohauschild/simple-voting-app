@@ -37,6 +37,6 @@ jobs:
     with:
       
       dockerhub-enable: true
-      context: result
+      context: ./result
       image-name: |
         leohauschild/vote-app-result
