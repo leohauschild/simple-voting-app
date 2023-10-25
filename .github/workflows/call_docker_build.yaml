@@ -32,8 +32,7 @@ jobs:
 
     with:
       
-      dockerhub-enable: false
-      ghcr-enable: true
+      dockerhub-enable: true
 
       image-name: |
         leohauschild/vote-app-result
