@@ -3,7 +3,7 @@ name: reusable docker
 on:
   workflow_call:
     inputs:
-      image_name: 
+      image-name: 
         description: Name of de Image
         required: false
         type: string
