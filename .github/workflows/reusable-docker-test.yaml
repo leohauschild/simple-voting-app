@@ -28,7 +28,7 @@ on:
         default: linux/amd64 # common ones: linux/amd64,linux/arm64,linux/arm/v7
       docker-registry:
         description: Docker registry
-        required: true
+        required: false
         type: string
         default: leohauschild
       docker-repo:
