@@ -2,30 +2,28 @@ name: Docker Build Result
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
     paths:
       - "result/**"
-    
-    #paths-ignore:
-    #  - 'README.md'
-  
+      - "vote/**"
+      - "worker/**"
+ 
   pull_request:
     paths: 
       - "result/**"
-
-    # paths-ignore:
-    #   - 'README.md'
-
+      - "vote/**"
+      - "worker/**"
 
 jobs:
 
   call-docker-build:
     name: Call Docker Build
-    uses: ./.github/workflows/reusable-docker-build.yaml
+    uses: ./.github/workflows/reusable-docker-test.yaml
 
     permissions:
-      contents: read
+      id-token: write
+      contents: write
       packages: write
       pull-requests: write
     
@@ -35,6 +33,4 @@ jobs:
 
     with:
       dockerhub-enable: true
-      context: ./result
-      image-name: |
-        leohauschild/vote-app-result
+      docker-repo: votingapp
