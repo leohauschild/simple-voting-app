@@ -80,7 +80,11 @@ jobs:
         #if: github.event_name == 'push'
         id: service-id
         run: |
-          echo "service-name=$(git log -1 --pretty=format:%h --name-only | xargs -I {} dirname {} | sort -u | tail -1)" >> $GITHUB_OUTPUT
+          echo "service-name=$(git diff --name-only HEAD~1 | grep -o '[^/]*' | cut -d "/" -f2 | head -1)" >> $GITHUB_OUTPUT
+      - 
+        name: Usar a saída 'service-name'
+        run: |
+          echo "O valor da saída 'service-name' é ${{ runner.outputs.service-id }}
       - 
         name: Create new Repo Tag
         id: tag_version
