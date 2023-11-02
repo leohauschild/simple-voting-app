@@ -1,4 +1,4 @@
-name: reusable docker
+name: reusable docker test
 
 on:
   workflow_call:
