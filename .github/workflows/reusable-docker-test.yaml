@@ -93,7 +93,7 @@ jobs:
           MODIFIED_FILES=$(git diff-tree --no-commit-id --name-only -r $LATEST_COMMIT)
 
           # Pega o diretório da última pasta modificada
-          echo "service-name=$(echo "$MODIFIED_FILES" | grep "/" | xargs -I {} dirname {} | sort -u | tail -1) >>  $GITHUB_OUTPUT
+          echo "service-name=$(echo "$MODIFIED_FILES" | grep "/" | xargs -I {} dirname {} | sort -u | tail -1)" >>  $GITHUB_OUTPUT
       - 
         name: Create new Repo Tag
         id: tag_version
