@@ -59,8 +59,7 @@ jobs:
   build-image:
     name: Build and Push
     runs-on: ubuntu-latest
-    outputs:
-      service-name: ${{ steps.service-id.outputs.service-name }}
+    
     steps:
       - 
         name: Set up Docker Buildx
@@ -76,12 +75,13 @@ jobs:
         with:
           username: ${{ secrets.dockerhub-username }}
           password: ${{ secrets.dockerhub-token }}    
-      -  
-        name: Get Service to Build
-        #if: github.event_name == 'push'
-        id: service-id
-        run: |
-          echo "service-name=$(git diff --name-only HEAD~1..HEAD | grep "/" | xargs -I {} dirname {} | sort -u | tail -1)" >> $GITHUB_OUTPUT
+      # -  
+      #   name: Get Service to Build
+      #   #if: github.event_name == 'push'
+      #   id: service-id
+      #   run: |
+      #     echo "service-name=$(git diff --name-only HEAD~1..HEAD | grep "/" | xargs -I {} dirname {} | sort -u | tail -1)" >> $GITHUB_OUTPUT
+        # Obtém o commit do push mais recente
       - 
         name: Create new Repo Tag
         id: tag_version
@@ -95,10 +95,10 @@ jobs:
         env:
           DOCKER_REGISTRY: ${{ inputs.docker-registry }}
           DOCKER_REPOSITORY: ${{ inputs.docker-repo }}
-          SERVICE_NAME: ${{ steps.service-id.outputs.service-name }} 
+          IMAGE_NAME: ${{ inputs.image-name }} 
           IMAGE_TAG: ${{ steps.tag_version.outputs.new_tag }}
         run: |
-          docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG ./$SERVICE_NAME
+          docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG ./$IMAGE_NAME
           docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG
 
 #docker push leohauschild/votingapp:tagname

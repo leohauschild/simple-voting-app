@@ -4,16 +4,17 @@ on:
   push:
     # branches:
     #   - main
+    tags: [ result-v* ]
     paths:
       - "result/**"
-      - "vote/**"
-      - "worker/**"
+      # - "vote/**"
+      # - "worker/**"
  
   pull_request:
     paths: 
       - "result/**"
-      - "vote/**"
-      - "worker/**"
+      # - "vote/**"
+      # - "worker/**"
 
 jobs:
 
