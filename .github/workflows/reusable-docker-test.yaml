@@ -81,7 +81,7 @@ jobs:
         #if: github.event_name == 'push'
         id: service-id
         run: |
-          echo "service-name=$(git diff --name-only HEAD~1..HEAD | grep "/" | xargs -I {} dirname {} | sort -u | tail -1)" >> $GITHUB_OUTPUT
+          echo "service-name=$(git diff --name-only HEAD~1 HEAD | grep "/" | xargs -I {} dirname {} | sort -u | tail -1)" >> $GITHUB_OUTPUT
         shell: bash
       - 
         name: Create new Repo Tag
