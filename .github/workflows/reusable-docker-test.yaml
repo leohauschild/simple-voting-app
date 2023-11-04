@@ -83,7 +83,6 @@ jobs:
         #if: github.event_name == 'push'
         id: service-id
         run: |
-          git commit --allow-empty -n -m "Initial commit."
           echo "service-name=$(git diff --name-only HEAD~1 | grep -o '^[^/]*' | cut -d "/" -f2 | head -1)" >> $GITHUB_OUTPUT
         shell: bash
       - 
