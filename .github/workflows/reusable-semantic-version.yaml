@@ -78,24 +78,24 @@ jobs:
         with:
           username: ${{ secrets.dockerhub-username }}
           password: ${{ secrets.dockerhub-token }}    
-      # - 
-      #   name: Database Version
-      #   id: tag-version
-      #   uses: paulhatch/semantic-version@v5.3.0
-      #   with:
-      #     major_pattern: "(MAJOR-RESULT)"
-      #     minor_pattern: "(MINOR-RESULT)"
-      #     change_path: "result"
-      #     namespace: result
+      -  
+        name: Get Service to Build
+        #if: github.event_name == 'push'
+        id: service-id
+        run: |
+          echo "service-name=$(git diff --name-only HEAD~1 | grep -o '^[^/]*' | cut -d "/" -f2 | head -1)" >> $GITHUB_OUTPUT
+        shell: bash
       - 
-        name: Database Version
+        name: Service version
         id: tag-version
         uses: paulhatch/semantic-version@v5.3.0
+        env:
+          SERVICE_NAME: ${{ steps.service-id.outputs.service-name }} 
         with:
-          major_pattern: "(MAJOR-VOTE)"
-          minor_pattern: "(MINOR-VOTE)"
-          change_path: "vote"
-          namespace: vote
+          major_pattern: "(MAJOR)"
+          minor_pattern: "(MINOR)"
+          change_path: "${env.SERVICE_NAME}"
+          namespace: ${env.SERVICE_NAME}
       - 
         name: Build, tag, and push the image 
         id: build-image
@@ -105,7 +105,7 @@ jobs:
           SERVICE_NAME: ${{ steps.service-id.outputs.service-name }} 
           IMAGE_TAG: ${{ steps.tag-version.outputs.version_tag }}
         run: |
-          docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG ./vote
+          docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG ./$SERVICE_NAME
           docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG
 
 #docker push leohauschild/votingapp:tagname
