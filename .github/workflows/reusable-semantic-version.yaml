@@ -1,0 +1,112 @@
+name: reusable docker semantic version
+
+on:
+  workflow_call:
+    inputs:
+      image-name: 
+        description: Name of de Image
+        required: false
+        type: string
+      context:
+        description: Docker context (path) to start build from
+        required: false
+        type: string
+      dockerhub-enable:
+        description: Log into Docker Hub
+        required: false
+        type: boolean
+        default: false
+      push:
+        description: Push image to registry
+        required: false
+        type: boolean
+        default: true
+      platforms:
+        description: Platforms to build for
+        required: false
+        type: string
+        default: linux/amd64 # common ones: linux/amd64,linux/arm64,linux/arm/v7
+      docker-registry:
+        description: Docker registry
+        required: false
+        type: string
+        default: leohauschild
+      docker-repo:
+        description: Docker Repository
+        required: true
+        type: string
+      
+     
+    secrets:
+      dockerhub-username:
+        description: Docker Hub username
+        required: false
+      dockerhub-token:
+        description: Docker Hub token
+        required: false
+      ecr-repo-name:
+        description: ECR Repository name
+        required: false
+
+permissions:
+  id-token: write
+  contents: write
+  packages: write 
+  pull-requests: write 
+
+
+jobs:
+  build-image:
+    name: Build and Push
+    runs-on: ubuntu-latest
+    outputs:
+      service-name: ${{ steps.service-id.outputs.service-name }}
+    steps:
+      - 
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3.0.0
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - 
+        name: Login to Docker Hub
+        if: inputs.dockerhub-enable
+        uses: docker/login-action@v3.0.0
+        with:
+          username: ${{ secrets.dockerhub-username }}
+          password: ${{ secrets.dockerhub-token }}    
+      - 
+        name: Database Version
+        id: tag-version
+        uses: paulhatch/semantic-version@v5.3.0
+        with:
+          major_pattern: "(MAJOR-RESULT)"
+          minor_pattern: "(MINOR-RESULT)"
+          change_path: "result"
+          namespace: result
+      - 
+        name: Database Version
+        id: tag-version
+        uses: paulhatch/semantic-version@v5.3.0
+        with:
+          major_pattern: "(MAJOR-VOTE)"
+          minor_pattern: "(MINOR-VOTE)"
+          change_path: "vote"
+          namespace: vote
+      - 
+        name: Build, tag, and push the image 
+        id: build-image
+        env:
+          DOCKER_REGISTRY: ${{ inputs.docker-registry }}
+          DOCKER_REPOSITORY: ${{ inputs.docker-repo }}
+          SERVICE_NAME: ${{ steps.service-id.outputs.service-name }} 
+          IMAGE_TAG: ${{ steps.tag-version.outputs.verion_tag }}
+        run: |
+          docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG ./$SERVICE_NAME
+          docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG
+
+#docker push leohauschild/votingapp:tagname
+

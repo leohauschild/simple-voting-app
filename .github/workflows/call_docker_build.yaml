@@ -19,7 +19,7 @@ jobs:
 
   call-docker-build:
     name: Call Docker Build
-    uses: ./.github/workflows/reusable-docker-test.yaml
+    uses: ./.github/workflows/reusable-semantic-verion.yaml
 
     permissions:
       id-token: write
