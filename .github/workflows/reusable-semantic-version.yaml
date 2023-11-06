@@ -92,8 +92,8 @@ jobs:
         env:
           SERVICE_NAME: ${{ steps.service-id.outputs.service-name }} 
         with:
-          major_pattern: "(MAJOR)"
-          minor_pattern: "(MINOR)"
+          major_pattern: "(major-${{ env.SERVICE_NAME }})"
+          minor_pattern: "(minor-${{ env.SERVICE_NAME }})"
           change_path: "${{ env.SERVICE_NAME }}"
           namespace: ${{ env.SERVICE_NAME }}
       - 
