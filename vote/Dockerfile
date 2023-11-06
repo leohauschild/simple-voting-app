@@ -1,4 +1,4 @@
-#1 Using official python runtime base image
+# Using official python runtime base image
 FROM python:3.9-slim
 
 #k add curl for healthcheck

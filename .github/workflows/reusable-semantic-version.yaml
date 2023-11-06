@@ -94,8 +94,8 @@ jobs:
         with:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
-          change_path: "${env.SERVICE_NAME}"
-          namespace: ${env.SERVICE_NAME}
+          change_path: "${{ env.SERVICE_NAME }}"
+          namespace: ${{ env.SERVICE_NAME }}
       - 
         name: Build, tag, and push the image 
         id: build-image
