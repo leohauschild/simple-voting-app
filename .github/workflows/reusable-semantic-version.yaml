@@ -105,7 +105,7 @@ jobs:
           SERVICE_NAME: ${{ steps.service-id.outputs.service-name }} 
           IMAGE_TAG: ${{ steps.tag-version.outputs.verion_tag }}
         run: |
-          docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG ./$SERVICE_NAME
+          docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG ./vote
           docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG
 
 #docker push leohauschild/votingapp:tagname
