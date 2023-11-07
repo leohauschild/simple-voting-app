@@ -59,8 +59,8 @@ jobs:
   build-image:
     name: Build and Push
     runs-on: ubuntu-latest
-    # outputs:
-    #   service-name: ${{ steps.service-id.outputs.service-name }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - 
         name: Set up Docker Buildx
@@ -88,7 +88,6 @@ jobs:
         id: tag-version
         uses: paulhatch/semantic-version@v5.3.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SERVICE_NAME: ${{ steps.service-id.outputs.service-name }} 
         with:
           major_pattern: "(major-${{ env.SERVICE_NAME }})"
@@ -97,7 +96,12 @@ jobs:
           bump_each_commit_patch_pattern: "(patch-${{ env.SERVICE_NAME }})"
           change_path: "${{ env.SERVICE_NAME }}/**"
           namespace: ${{ env.SERVICE_NAME }}
-          version_from_branch: ${{ steps.tag-version.outputs.version_tag }}
+      - 
+        name: Create release on Repository
+        uses: rymndhng/release-on-push-action@master
+        with:
+          tag_prefix: ""
+          release_name: ${{ steps.tag-version.outputs.version_tag }}
       - 
         name: Build, tag, and push the image 
         id: build-image
