@@ -104,6 +104,7 @@ jobs:
           created_tag: ${{ steps.tag-version.outputs.version_tag }}
       - 
         name: Build, tag, and push the image 
+        if: steps.tag-version.outputs.version_tag
         id: build-image
         env:
           DOCKER_REGISTRY: ${{ inputs.docker-registry }}
