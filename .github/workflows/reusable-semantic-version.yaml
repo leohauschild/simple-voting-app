@@ -98,7 +98,7 @@ jobs:
           namespace: ${{ env.SERVICE_NAME }}
       - 
         name: Upload release notes
-        if: steps.tag_and_prepare_release.outputs.tag
+        if: steps.tag-version.outputs.version_tag
         uses: Roang-zero1/github-create-release-action@v3
         with:
           created_tag: ${{ steps.tag-version.outputs.version_tag }}
