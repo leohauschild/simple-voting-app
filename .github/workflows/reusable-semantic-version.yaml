@@ -96,7 +96,7 @@ jobs:
           bump_each_commit_patch_pattern: "(patch-${{ env.SERVICE_NAME }})"
           change_path: "${{ env.SERVICE_NAME }}/**"
           namespace: ${{ env.SERVICE_NAME }}
-          version_from_branch: true
+          version_from_branch: ${{ steps.tag-version.outputs.version_tag }}
       - 
         name: Build, tag, and push the image 
         id: build-image
