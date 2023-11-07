@@ -59,8 +59,8 @@ jobs:
   build-image:
     name: Build and Push
     runs-on: ubuntu-latest
-    outputs:
-      service-name: ${{ steps.service-id.outputs.service-name }}
+    # outputs:
+    #   service-name: ${{ steps.service-id.outputs.service-name }}
     steps:
       - 
         name: Set up Docker Buildx
@@ -80,11 +80,9 @@ jobs:
           password: ${{ secrets.dockerhub-token }}    
       -  
         name: Get Service to Build
-        #if: github.event_name == 'push'
         id: service-id
         run: |
           echo "service-name=$(git diff --name-only HEAD~1 | grep -o '^[^/]*' | cut -d "/" -f2 | head -1)" >> $GITHUB_OUTPUT
-        shell: bash
       - 
         name: Service version
         id: tag-version
@@ -105,7 +103,6 @@ jobs:
           DOCKER_REPOSITORY: ${{ inputs.docker-repo }}
           SERVICE_NAME: ${{ steps.service-id.outputs.service-name }} 
           IMAGE_TAG: ${{ steps.tag-version.outputs.version_tag }}
-          DEBUG: ${{ steps.tag-version.outputs.debug }}
         run: |
           docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG ./$SERVICE_NAME
           docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG
