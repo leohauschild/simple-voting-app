@@ -96,6 +96,7 @@ jobs:
           minor_pattern: "(minor-${{ env.SERVICE_NAME }})"
           change_path: "${{ env.SERVICE_NAME }}"
           namespace: ${{ env.SERVICE_NAME }}
+          debug: true
       - 
         name: Build, tag, and push the image 
         id: build-image
