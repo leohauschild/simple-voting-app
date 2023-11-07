@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-#s add curl for healthcheck
+# add curl for healthcheck
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     curl \
