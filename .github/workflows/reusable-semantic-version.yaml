@@ -92,6 +92,7 @@ jobs:
         with:
           major_pattern: "(major-${{ env.SERVICE_NAME }})"
           minor_pattern: "(minor-${{ env.SERVICE_NAME }})"
+          bump_each_commit: true
           bump_each_commit_patch_pattern: "(patch-${{ env.SERVICE_NAME }})"
           change_path: "${{ env.SERVICE_NAME }}/**"
           namespace: ${{ env.SERVICE_NAME }}
