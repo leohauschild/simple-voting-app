@@ -68,7 +68,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       matrix:
-        service: ${{ fromJSON(inputs.services) }}
+        services: ${{ fromJSON(inputs.services) }}
 
     steps:
       - 
