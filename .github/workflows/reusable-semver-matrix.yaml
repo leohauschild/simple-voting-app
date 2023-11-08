@@ -35,6 +35,11 @@ on:
         description: Docker Repository
         required: true
         type: string
+      services:
+        description: Services name to Build
+        required: false
+        type: string
+        default: '["vote, "result"]'
       
      
     secrets:
@@ -63,17 +68,9 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       matrix:
-        folder: [result, vote, worker]
+        service: ${{ fromJSON(inputs.services) }}
 
     steps:
-      - 
-        name: Verificar pastas modificadas
-        id: check_modified_folders
-        run: |
-          # Obtenha uma lista de pastas modificadas
-          modified_folders=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -E '/[^/]+/' | cut -d/ -f2 | sort -u)
-          echo "::set-output name=modified_folders::$modified_folders"
-        shell: bash
       - 
         name: Set up Docker Buildx
         id: buildx
@@ -98,7 +95,7 @@ jobs:
       - 
         name: Service version tag
         id: tag-version
-        if: contains(steps.check_modified_folders.outputs.modified_folders, matrix.folder)
+        if: matrix.service == ${{ steps.service-id.outputs.service-name }} 
         uses: paulhatch/semantic-version@v5.3.0
         env:
           SERVICE_NAME: ${{ steps.service-id.outputs.service-name }} 

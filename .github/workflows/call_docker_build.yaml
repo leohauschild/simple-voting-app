@@ -8,12 +8,14 @@ on:
       - "result/**"
       - "vote/**"
       - "worker/**"
+      - '!.github/**'
  
   pull_request:
     paths: 
       - "result/**"
       - "vote/**"
       - "worker/**"
+      - '!.github/**'
 
 jobs:
 
