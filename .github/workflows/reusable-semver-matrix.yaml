@@ -39,7 +39,7 @@ on:
         description: Services name to Build
         required: false
         type: string
-        default: '["vote, "result"]'
+        default: "['vote', 'result']"
       
      
     secrets:
