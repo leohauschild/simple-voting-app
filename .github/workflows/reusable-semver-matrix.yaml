@@ -1,4 +1,4 @@
-name: reusable docker semantic version
+name: reusable docker semantic version Matrix
 
 on:
   workflow_call:
